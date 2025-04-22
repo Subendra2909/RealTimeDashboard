@@ -1,7 +1,9 @@
 package com.analytics.model;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Event {
@@ -10,10 +12,18 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "User ID cannot be blank")
     private String userId;
+
+    @NotBlank(message = "Event type cannot be blank")
     private String eventType;
+
+    @NotBlank(message = "Page URL cannot be blank")
     private String pageUrl;
-    private Instant timestamp;
+
+    @NotNull(message = "Timestamp is required")
+    private LocalDateTime timestamp;
+
 
     public Long getId() { return id; }
     public void setId(Long id) {this.id = id; }
@@ -27,6 +37,6 @@ public class Event {
     public String getPageUrl() { return pageUrl; }
     public void setPageUrl(String pageUrl) { this.pageUrl = pageUrl; }
 
-    public Instant getTimestamp() { return timestamp; }
-    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
 }

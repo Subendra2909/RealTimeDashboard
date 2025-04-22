@@ -5,7 +5,15 @@ import java.util.List;
 import com.analytics.model.Event;
 import com.analytics.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
+
+
 
 @RestController
 @RequestMapping("/api/events")
@@ -22,8 +30,9 @@ public class EventController {
     //Returns the saved object (with id and timestamp)
 
     @PostMapping
-    public Event createEvent(@RequestBody Event event){
-        return eventRepository.save(event);
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
+        Event savedEvent = eventRepository.save(event);
+        return new ResponseEntity<>(savedEvent,HttpStatus.CREATED);
     }
 
 
