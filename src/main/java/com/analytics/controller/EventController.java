@@ -4,9 +4,12 @@ import java.util.List;
 
 import com.analytics.model.Event;
 import com.analytics.repository.EventRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,9 @@ public class EventController {
     //injects object of EventRepository without using new()
     private EventRepository eventRepository;
 
+    @Autowired
+    private KafkaTemplate<String,String> kafkaTemplate;
+
 
     //Accepts a JSON payload from the client
     //Maps it to an Event object (@RequestBody)
@@ -30,9 +36,14 @@ public class EventController {
     //Returns the saved object (with id and timestamp)
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
-        Event savedEvent = eventRepository.save(event);
-        return new ResponseEntity<>(savedEvent,HttpStatus.CREATED);
+    public ResponseEntity<String> createEvent(@Valid @RequestBody Event event) throws JsonProcessingException {
+        // Convert event object to JSON string
+        String eventJson = new ObjectMapper().writeValueAsString(event);
+
+        // Send to Kafka
+        kafkaTemplate.send("events",eventJson);
+
+        return ResponseEntity.ok("Event sent to Kafka");
     }
 
 

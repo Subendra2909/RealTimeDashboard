@@ -35,7 +35,6 @@
     </dependency>
 
 
-
     <!-- JPA for DB access -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -67,6 +66,12 @@
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
       <version>3.0.2</version>
+    </dependency>
+
+    <!-- Kafka support -->
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
     </dependency>
 
   </dependencies>

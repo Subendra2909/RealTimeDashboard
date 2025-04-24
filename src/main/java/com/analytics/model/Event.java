@@ -1,5 +1,7 @@
 package com.analytics.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.datatype.jsr310.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotBlank;
@@ -21,9 +23,9 @@ public class Event {
     @NotBlank(message = "Page URL cannot be blank")
     private String pageUrl;
 
-    @NotNull(message = "Timestamp is required")
-    private LocalDateTime timestamp;
-
+    @NotBlank(message = "Timestamp is required")
+    @Column(length = 50)             // optional: ensure enough space
+    private String timestamp;
 
     public Long getId() { return id; }
     public void setId(Long id) {this.id = id; }
@@ -37,6 +39,6 @@ public class Event {
     public String getPageUrl() { return pageUrl; }
     public void setPageUrl(String pageUrl) { this.pageUrl = pageUrl; }
 
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 }
