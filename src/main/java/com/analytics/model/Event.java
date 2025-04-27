@@ -1,15 +1,22 @@
 package com.analytics.model;
 
+import com.analytics.kafka.EventConsumer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.datatype.jsr310.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 public class Event {
+    private static final Logger logger = LoggerFactory.getLogger(Event.class);
 
+    public Event() {
+        logger.info("Inside Event");
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

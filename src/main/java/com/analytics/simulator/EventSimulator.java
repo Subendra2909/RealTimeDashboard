@@ -1,7 +1,10 @@
 package com.analytics.simulator;
 
+import com.analytics.model.Event;
 import com.github.javafaker.Faker;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -13,6 +16,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class EventSimulator {
+
+    private static final Logger logger = LoggerFactory.getLogger(EventSimulator.class);
+
+    public EventSimulator() {
+        logger.info("Inside EventSimulator");
+    }
     private static final Faker faker = new Faker();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final HttpClient httpClient = HttpClient.newHttpClient();
@@ -38,7 +47,7 @@ public class EventSimulator {
             System.out.println("Sent event: " + json);
             System.out.println("Response: " + response.statusCode());
 
-            TimeUnit.SECONDS.sleep(2);  // Send every 2 seconds
+            TimeUnit.SECONDS.sleep(1);  // Send every 1 seconds
         }
         System.out.println("Simulation complete: 100 events sent.");
     }
