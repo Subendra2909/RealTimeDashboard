@@ -27,7 +27,7 @@ public class EventSimulator {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
     public static void main(String[] args) throws Exception {
-        for(int i=0;i<1;i++){
+        for(int i=0;i<10;i++){
             Map<String, Object> event = new HashMap<>();
             event.put("userId", faker.idNumber().valid());
             event.put("eventType", faker.options().option("click", "scroll", "purchase", "hover"));

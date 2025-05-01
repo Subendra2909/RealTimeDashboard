@@ -35,7 +35,8 @@ public class AnalyticsService {
     private final Map<String, AtomicInteger> minuteCounts = new ConcurrentHashMap<>();
 
 
-    private static final DateTimeFormatter MINUTE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter MINUTE_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public void processEvent(Event event) {
         logger.info("Inside processEvent");
@@ -52,12 +53,13 @@ public class AnalyticsService {
         hourlyActivity.computeIfAbsent(hour, k -> new AtomicInteger(0)).incrementAndGet();
 
         AnalyticsData analyticsData = buildAnalyticsData();
-        messagingTemplate.convertAndSend("/topic/analytics", getEventsPerLast10Minutes());
+        messagingTemplate.convertAndSend("/topic/analytics", analyticsData);
+        logger.info("minute data : {}",analyticsData.getEventsPerMinute());
     }
 
     private AnalyticsData buildAnalyticsData() {
         return new AnalyticsData(
-                getEventsPerLast10Minutes(),
+                getEventsPerMinute(),
                 getUserEventCounts(),
                 getPeakHour(),
                 getTopEventTypesInLastXMinutes(10),
@@ -87,7 +89,11 @@ public class AnalyticsService {
 
     private void updateMinuteCounts(Event event) {
         // Count by minute
-        String minuteKey = String.format(event.getTimestamp(), MINUTE_FORMATTER);
+        // Parse string to LocalDateTime
+        LocalDateTime timestamp = LocalDateTime.parse(event.getTimestamp(), ISO_FORMATTER);
+
+        // Format to "HH:mm" for grouping
+        String minuteKey = timestamp.format(MINUTE_FORMATTER);
         eventsPerMinute.computeIfAbsent(minuteKey, k -> new AtomicInteger(0)).incrementAndGet();
     }
 
@@ -97,8 +103,17 @@ public class AnalyticsService {
     }
 
     public Map<String, Integer> getEventsPerMinute() {
-        return convertToIntegerMap(eventsPerMinute);
+        return eventsPerMinute.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().get(),
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
+
 
     public Map<String, Integer> getUserEventCounts() {
         return userEventCounts.entrySet().stream()
