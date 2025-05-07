@@ -17,7 +17,7 @@ const Dashboard = () => {
           .then(res => res.text())
           .then(data => setPeakHour(data));
 
-        fetch("http://localhost:8080/api/events/top-event-types?minutes=10")
+        fetch("http://localhost:8080/api/events/top-event-types?minutes=3")
           .then(res => res.json())
           .then(data => setTopEventTypes(data));
     });
@@ -80,7 +80,7 @@ const Dashboard = () => {
             </div>
 
             <div style={cardStyle}>
-              <h2>Top Event Types (Last 10 Minutes)</h2>
+              <h2>Top Event Types (Last 3 Minutes)</h2>
               <BarChart width={500} height={250} data={
                 Object.entries(topEventTypes).map(([eventType, count]) => ({ eventType, count }))
               }>

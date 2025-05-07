@@ -27,7 +27,7 @@ public class EventSimulator {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
     public static void main(String[] args) throws Exception {
-        for(int i=0;i<10;i++){
+        for(int i=0;i<200;i++){
             Map<String, Object> event = new HashMap<>();
             event.put("userId", faker.idNumber().valid());
             event.put("eventType", faker.options().option("click", "scroll", "purchase", "hover"));
@@ -47,7 +47,7 @@ public class EventSimulator {
             System.out.println("Sent event: " + json);
             System.out.println("Response: " + response.statusCode());
 
-            TimeUnit.SECONDS.sleep(1);  // Send every 1 seconds
+            TimeUnit.SECONDS.sleep(3);  // Send every 1 seconds
         }
         System.out.println("Simulation complete: 100 events sent.");
     }

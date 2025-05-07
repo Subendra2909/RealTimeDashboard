@@ -62,7 +62,7 @@ public class AnalyticsService {
                 getEventsPerMinute(),
                 getUserEventCounts(),
                 getPeakHour(),
-                getTopEventTypesInLastXMinutes(10),
+                getTopEventTypesInLastXMinutes(3),
                 getEventTypeCounts()
         );
     }
