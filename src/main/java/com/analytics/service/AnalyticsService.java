@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class AnalyticsService {
     private final ConcurrentHashMap<String, AtomicInteger> eventsPerMinute = new ConcurrentHashMap<>();
     private final Map<String, AtomicInteger> userEventCounts = new ConcurrentHashMap<>();
     private final Map<Integer, AtomicInteger> hourlyActivity = new ConcurrentHashMap<>();
-    private final List<Event> recentEvents = Collections.synchronizedList(new LinkedList<>());
+    private final List<Event> recentEvents = new CopyOnWriteArrayList<>();
     private final Map<String, AtomicInteger> minuteCounts = new ConcurrentHashMap<>();
 
 
