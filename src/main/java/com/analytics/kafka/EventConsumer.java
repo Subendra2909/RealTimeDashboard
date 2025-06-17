@@ -27,7 +27,7 @@ public class EventConsumer {
     @Autowired
     private AnalyticsService analyticsService;
 
-    @KafkaListener(topics = "events", groupId = "g1")
+    @KafkaListener(topics = "events", groupId = "g1", concurrency = "5")
     public void listen(String json) {
         logger.info("Inside kafkalistener listen");
         try {
@@ -38,7 +38,10 @@ public class EventConsumer {
             analyticsService.processEvent(event);
 
             // Save to DB
+            long start = System.currentTimeMillis();
             eventRepository.save(event);
+            long end = System.currentTimeMillis();
+            System.out.println("DB insert took: " + (end - start) + "ms");
 
             System.out.println("Got from Kafka and saved: " + json);
 
